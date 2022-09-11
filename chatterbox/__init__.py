@@ -1,7 +1,7 @@
 """
 ChatterBox is a machine learning, conversational dialog engine.
 """
-from ..chatterbox import ChatBot
+from .chatterbox import ChatBot
 
 
 __all__ = (
