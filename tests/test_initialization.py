@@ -1,0 +1,49 @@
+from tests.base_case import ChatBotTestCase
+
+
+class StringInitializationTestCase(ChatBotTestCase):
+
+    def get_kwargs(self):
+        return {
+            'storage_adapter': 'chatterbox.storage.SQLStorageAdapter',
+            'database_uri': None
+        }
+
+    def test_storage_initialized(self):
+        from chatterbox.storage import SQLStorageAdapter
+        self.assertTrue(isinstance(self.chatbot.storage, SQLStorageAdapter))
+
+    def test_logic_initialized(self):
+        from chatterbox.logic import BestMatch
+        self.assertEqual(len(self.chatbot.logic_adapters), 1)
+        self.assertTrue(isinstance(self.chatbot.logic_adapters[0], BestMatch))
+
+
+class DictionaryInitializationTestCase(ChatBotTestCase):
+
+    def get_kwargs(self):
+        return {
+            'storage_adapter': {
+                'import_path': 'chatterbox.storage.SQLStorageAdapter',
+                'database_uri': None
+            },
+            'logic_adapters': [
+                {
+                    'import_path': 'chatterbox.logic.BestMatch',
+                },
+                {
+                    'import_path': 'chatterbox.logic.MathematicalEvaluation',
+                }
+            ]
+        }
+
+    def test_storage_initialized(self):
+        from chatterbox.storage import SQLStorageAdapter
+        self.assertTrue(isinstance(self.chatbot.storage, SQLStorageAdapter))
+
+    def test_logic_initialized(self):
+        from chatterbox.logic import BestMatch
+        from chatterbox.logic import MathematicalEvaluation
+        self.assertEqual(len(self.chatbot.logic_adapters), 2)
+        self.assertTrue(isinstance(self.chatbot.logic_adapters[0], BestMatch))
+        self.assertTrue(isinstance(self.chatbot.logic_adapters[1], MathematicalEvaluation))
